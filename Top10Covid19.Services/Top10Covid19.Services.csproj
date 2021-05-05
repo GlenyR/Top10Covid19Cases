@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Top10Covid19.ApiClient\Top10Covid19.ApiClient.csproj" />
+  </ItemGroup>
+
+</Project>

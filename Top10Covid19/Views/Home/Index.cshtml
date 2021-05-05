@@ -1,0 +1,94 @@
+﻿@model Top10Covid19.Web.ViewModels.SelectReportVM
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@Html.HiddenFor(m => m.SelectedRegion)
+
+<div class="row">
+    <div class="col-4">
+        <form method="get" id="regionForm" role="form">
+            <div class="row">
+                <div class="col">
+                    @Html.DropDownListFor(f => f.SelectedRegion, Model.Regions, "Regions", new { @class = "form-control" })
+                </div>
+                <div class="col">
+                    <button type="submit" asp-action="Index" asp-controller="Home" asp-route-selectedRegion="@Model.SelectedRegion" class="btn btn-primary">REPORT</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-4">
+        <div>
+            <p class="loading"></p>
+        </div>
+    </div>
+    <div class="col-4">
+            <form method="post" id="exportDataForm">
+                <div class="btn-group" role="group">
+                    <button type="submit" asp-action="ExportToXML" asp-controller="Home" asp-route-selectedRegion="@Model.SelectedRegion" class="btn btn-secondary">XML</button>
+                    <button type="submit" asp-action="ExportToJSON" asp-controller="Home" asp-route-selectedRegion="@Model.SelectedRegion" class="btn btn-secondary">JSON</button>
+                    <button type="submit" asp-action="ExportToCSV" asp-controller="Home" asp-route-selectedRegion="@Model.SelectedRegion" class="btn btn-secondary">CSV</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @ViewData["NameTitle"]
+                </th>
+                <th>
+                    CASES
+                </th>
+                <th>
+                    DEATHS
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Data)
+            {
+                <tr>
+                    <td>
+                        @item.Name.ToUpper()
+                    </td>
+                    <td>
+                        @String.Format("{0:n0}", item.Confirmed)
+                    </td>
+                    <td>
+                        @String.Format("{0:n0}", item.Deaths)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script>
+
+        document.querySelector('#regionForm').addEventListener('submit', (event) => {
+            showLoading('Loading data')
+        })
+
+        document.querySelector('#exportDataForm').addEventListener('submit', (event) => {
+            showLoading('Preparing data for export')
+
+            setTimeout(function () {
+                $(".loading").html($(".loading").data('original-text'));
+            }, 4000);
+
+        })
+
+        function showLoading(message) {
+            var loadingText = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${message}...`;
+            if ($(".loading").html() !== loadingText) {
+                $(".loading").data('original-text', $(".loading").html());
+                $(".loading").html(loadingText);
+            }
+        }
+
+    </script>
